@@ -6,11 +6,6 @@ import (
 	atl "github.com/nodejayes/action-transport-layer/pkg"
 )
 
-// AddToDoPayload ist the Structure of the AddToDo Action Payload
-type AddToDoPayload struct {
-	Item store.ToDo `json:"item"`
-}
-
 // AddToDoResponse is the Response Format of the AddToDo Action
 type AddToDoResponse struct {
 	Result store.ToDo `json:"result"`
@@ -32,13 +27,13 @@ func (r AddToDoResponse) GetError() string {
 
 // AddToDoHandler is the Action Handler of the AddToDo Action
 func AddToDoHandler(cl *atl.Client, payload map[string]interface{}) error {
-	var params AddToDoPayload
+	var params store.ToDo
 	err := mapstructure.Decode(payload, &params)
 	if err != nil {
 		return err
 	}
 
-	item, err := store.CreateToDo(params.Item)
+	item, err := store.CreateToDo(params)
 	if err != nil {
 		return err
 	}

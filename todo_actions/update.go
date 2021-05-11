@@ -76,16 +76,19 @@ func UpdateToDoDescriptionHandler(cl *atl.Client, payload map[string]interface{}
 	var param UpdateToDoDescriptionPayload
 	err := mapstructure.Decode(payload, &param)
 	if err != nil {
+		cl.Send("UpdateToDoDescription", UpdateToDoDescriptionResponse{Result: store.ToDo{}, Error: err})
 		return err
 	}
 
 	item, err := store.ReadToDo(param.ID)
 	if err != nil {
+		cl.Send("UpdateToDoDescription", UpdateToDoDescriptionResponse{Result: item, Error: err})
 		return err
 	}
 	item.Description = param.Description
 	_, err = store.UpdateToDo(item)
 	if err != nil {
+		cl.Send("UpdateToDoDescription", UpdateToDoDescriptionResponse{Result: item, Error: err})
 		return err
 	}
 	cl.Send("UpdateToDoDescription", UpdateToDoDescriptionResponse{Result: item})
